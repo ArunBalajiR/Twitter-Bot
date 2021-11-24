@@ -18,64 +18,53 @@ api = TwitterAPI(os.environ.get('TWITTER_CONSUMER_KEY'),
 
 # Get the GitHub Gist that contains our state database
 gh = github.Github(os.environ.get('GIST_TOKEN'))
-gist = gh.get_gist("githuburl")
+gist = gh.get_gist("2ed8fb2e29c928a3892d77c9a633752c")
 
-# stateDb = json.loads(gist.files['state.json'].content)
-
-
-data_p = json.load(open('posted.json'))
-jtopy_p=json.dumps(data_p) 
-stateDb=json.loads(jtopy_p) 
-
-print(f" : Loaded state DB with {len(stateDb)} entries")
-
-# Get the memories DB
-
-# req = requests.get(os.environ.get('MEMORY_DB_URL'))
-# memories = req.json()
-
-data_o = json.load(open('photos_unposted.json'))
-jtopy_o=json.dumps(data_o) 
-req=json.loads(jtopy_o) 
-memories = req
+postedPics = json.loads(gist.files['posted.json'].content)
 
 
+print(f" : Loaded Posted Pictures Database with {len(postedPics)} entries")
 
-print(f" : Loaded pictures DB with {len(memories)} memories")
+# Get the PicturesToPost DB
 
-# Randomly select memories from the database, comparing them to the state database
+req = requests.get("https://raw.githubusercontent.com/ArunBalajiR/Twitter-Bot/master/photos_unposted.json")
+picsToPost = req.json()
+
+print(f" : Loaded PicturesToPost DB with {len(picsToPost)} entries")
+
+# Randomly select picsToPost from the database, comparing them to the postedPics database
 #   to make sure they haven't already been posted. If they have then pick a new one.
 
-print(" : Choosing a random memory")
+print(" : Choosing a random picture")
 
 while True:
-    # Find our random memory to post from the DB
+    # Find our random picture to post from the DB
 
-    chosenMemory = random.choice(memories)
+    chosenPicture = random.choice(picsToPost)
 
-    print(f" : Checking memory '{chosenMemory['title']}'")
+    print(f" : Checking Picture '{chosenPicture['title']}'")
 
-    if chosenMemory['title'] in stateDb:
-        print(f" : WARNING: Memory {chosenMemory['title']} already posted; choosing new one...")
+    if chosenPicture['title'] in postedPics:
+        print(f" : WARNING: Memory {chosenPicture['title']} already posted; choosing new one...")
         continue
     else:
         break
 
-print(" : Memory Chosen")
+print(" : Picture Chosen")
 print("==================================================================")
-pprint(chosenMemory)
+pprint(chosenPicture)
 print("==================================================================")
 
-# Download the memory image
+# Download the Chosen Picture
 
-response = requests.get(chosenMemory['url_o'], stream=True)
+response = requests.get(chosenPicture['url_o'], stream=True)
 
 with open('img.jpg', 'wb') as out_file:
     shutil.copyfileobj(response.raw, out_file)
 
 # Assemble the tweet text
 
-tweet = f"{chosenMemory['title']} \n{chosenMemory['url_l']}\n\nPhoto By {chosenMemory['owner']}"
+tweet = f"{chosenPicture['title']} \n\nPhoto By {chosenPicture['ownername']}"
 
 print(" : Preview of tweet to be posted")
 print("==================================================================")
@@ -84,64 +73,35 @@ print("==================================================================")
 
 # Post to Twitter!
 
-# if "DRY_RUN" in os.environ:
-#     print(" : Dry Run, exiting without posting to twitter")
-# else:
-#     # STEP 1 - upload image
-#     file = open('img.jpg', 'rb')
-#     data = file.read()
-#     r = api.request('media/upload', None, {'media': data})
-#     if r.status_code == 200:
-#         print(' : SUCCESS: Photo upload to twitter')
-#     else: 
-#         raise SystemExit(f" : FAILURE: Photo upload to twitter: {r.text}")
+if "DRY_RUN" in os.environ:
+    print(" : Dry Run, exiting without posting to twitter")
+else:
+    # STEP 1 - upload image
+    file = open('img.jpg', 'rb')
+    data = file.read()
+    r = api.request('media/upload', None, {'media': data})
+    if r.status_code == 200:
+        print(' : SUCCESS: Photo upload to twitter')
+    else: 
+        raise SystemExit(f" : FAILURE: Photo upload to twitter: {r.text}")
 
-#     # STEP 2 - post tweet with a reference to uploaded image
-#     if r.status_code == 200:
-#         media_id = r.json()['media_id']
-#         r = api.request('statuses/update', {'status': tweet, 'media_ids': media_id})
-#         if r.status_code == 200: 
+    # STEP 2 - post tweet with a reference to uploaded image
+    if r.status_code == 200:
+        media_id = r.json()['media_id']
+        r = api.request('statuses/update', {'status': tweet, 'media_ids': media_id})
+        if r.status_code == 200: 
 
-#             twitterPostData = json.loads(r.text)
+            twitterPostData = json.loads(r.text)
 
-#             print(' : SUCCESS: Tweet posted')
+            print(' : SUCCESS: Tweet posted')
 
-#             # Append to the state database
+            # Append to the postedPics database
 
-#             stateDb[chosenMemory['title']] = {"tweet_id":twitterPostData['id'], "posted_on":datetime.now().isoformat()}
+            postedPics[chosenPicture['title']] = {"tweet_id":twitterPostData['id'], "posted_on":datetime.now().isoformat()}
 
-#             gist.edit(files={"state.json": github.InputFileContent(content=json.dumps(stateDb, indent=2))})
-#             print(" : State DB updated")
-#         else:
-#             raise SystemExit(f" : FAILURE: Tweet not posted: {r.text}")
+            gist.edit(files={"posted.json": github.InputFileContent(content=json.dumps(postedPics, indent=2))})
+            print(" : PostedPics updated")
+        else:
+            raise SystemExit(f" : FAILURE: Tweet not posted: {r.text}")
 
-
-
-# STEP 1 - upload image
-file = open('img.jpg', 'rb')
-data = file.read()
-r = api.request('media/upload', None, {'media': data})
-if r.status_code == 200:
-    print(' : SUCCESS: Photo upload to twitter')
-else: 
-    raise SystemExit(f" : FAILURE: Photo upload to twitter: {r.text}")
-
-# STEP 2 - post tweet with a reference to uploaded image
-if r.status_code == 200:
-    media_id = r.json()['media_id']
-    r = api.request('statuses/update', {'status': tweet, 'media_ids': media_id})
-    if r.status_code == 200: 
-
-        twitterPostData = json.loads(r.text)
-
-        print(' : SUCCESS: Tweet posted')
-
-        # Append to the state database
-
-        stateDb[chosenMemory['title']] = {"tweet_id":twitterPostData['id'], "posted_on":datetime.now().isoformat()}
-
-        content=json.dumps(stateDb, indent=2)
-        print(" : State DB updated")
-    else:
-        raise SystemExit(f" : FAILURE: Tweet not posted: {r.text}")
 
