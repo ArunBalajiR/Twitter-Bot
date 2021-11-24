@@ -18,7 +18,8 @@ api = TwitterAPI(os.environ.get('TWITTER_CONSUMER_KEY'),
 
 # Get the GitHub Gist that contains our state database
 gh = github.Github(os.environ.get('GIST_TOKEN'))
-gist = gh.get_gist("2ed8fb2e29c928a3892d77c9a633752c")
+gist = gh.get_gist(os.environ.get('PICTURE_DB'))
+
 
 postedPics = json.loads(gist.files['posted.json'].content)
 
@@ -27,7 +28,7 @@ print(f" : Loaded Posted Pictures Database with {len(postedPics)} entries")
 
 # Get the PicturesToPost DB
 
-req = requests.get("https://raw.githubusercontent.com/ArunBalajiR/Twitter-Bot/master/photos_unposted.json")
+req = requests.get(os.environ.get('PICTURE_DB_URL'))
 picsToPost = req.json()
 
 print(f" : Loaded PicturesToPost DB with {len(picsToPost)} entries")
