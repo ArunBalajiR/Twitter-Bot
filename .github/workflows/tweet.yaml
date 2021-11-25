@@ -2,7 +2,7 @@ name: Tweet Wallpaper Daily
 
 on:
   schedule:
-    - cron: "15 15,17 * * *"
+    - cron: "00 3,7,14,17 * * *"
 
   workflow_dispatch:
 
