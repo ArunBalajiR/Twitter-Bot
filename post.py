@@ -63,9 +63,26 @@ response = requests.get(chosenPicture['url_o'], stream=True)
 with open('img.jpg', 'wb') as out_file:
     shutil.copyfileobj(response.raw, out_file)
 
+#Get the Respective Owners's twitter Id to mention in tweet
+twitterHandle = {
+    "kamalvmpt" : "@Retouch_Gallery",
+    "kamalvijay32" : "@KamalOfcl",
+    "rockybhai369offl" : "@RockybhaiOffcl",
+    "nikhilab1511":"@Nikhil_Ofcl",
+    "KeshhFlix":"@ItzKeshh",
+    "ivineimmanuel0611" : "@IvineImmanuel",
+    "deepakppvfc6":"@_DR_Designs",
+    "Rakhi\u30c4":"@rakesh_tarakian",
+    "suryasandy13":"@TroyboiS",
+    "evilhari664":"@Hariis87937166",
+    "ItsAnbuchelvan":"@itsanbuchelvan",
+    "Dark Rum Pintrest":"@DarkRumPintrest",
+    "Prinz_ram":"@itzram73"
+}    
+
 # Assemble the tweet text
 
-tweet = f"{chosenPicture['title']} \n\nPhoto By {chosenPicture['ownername']}"
+tweet = f"{chosenPicture['title']} \n\nImage By {twitterHandle[chosenPicture['ownername']]}\n\n\nHD Link : https://onelink.to/reflix\n\n#ReFlix"
 
 print(" : Preview of tweet to be posted")
 print("==================================================================")
