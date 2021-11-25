@@ -45,7 +45,7 @@ while True:
 
     print(f" : Checking Picture '{chosenPicture['title']}'")
 
-    if chosenPicture['title'] in postedPics:
+    if str(chosenPicture["id"]) in postedPics:
         print(f" : WARNING: Memory {chosenPicture['title']} already posted; choosing new one...")
         continue
     else:
@@ -98,7 +98,7 @@ else:
 
             # Append to the postedPics database
 
-            postedPics[chosenPicture['title']] = {"tweet_id":twitterPostData['id'], "posted_on":datetime.now().isoformat()}
+            postedPics[chosenPicture['id']] = {"tweet_id":twitterPostData['id'], "posted_on":datetime.now().isoformat()}
 
             gist.edit(files={"posted.json": github.InputFileContent(content=json.dumps(postedPics, indent=2))})
             print(" : PostedPics updated")
