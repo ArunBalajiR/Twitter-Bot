@@ -77,7 +77,8 @@ twitterHandle = {
     "evilhari664":"@Hariis87937166",
     "ItsAnbuchelvan":"@itsanbuchelvan",
     "Dark Rum Pintrest":"@DarkRumPintrest",
-    "Prinz_ram":"@itzram73"
+    "Prinz_ram":"@itzram73",
+    "athulkrishnan884":"@athulkrishnanvf",
 }    
 
 # Assemble the tweet text
