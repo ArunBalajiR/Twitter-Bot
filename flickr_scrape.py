@@ -5,11 +5,10 @@ import json
 import flickrapi
 from pprint import pprint
 
-# flickr_api_key    = os.environ.get('FLICKR_API_KEY')
-# flickr_api_secret = os.environ.get('FLICKR_API_SECRET')
+flickr_api_key    = os.environ.get('FLICKR_API_KEY')
+flickr_api_secret = os.environ.get('FLICKR_API_SECRET')
 
-flickr_api_key    = "e29282819555c436e94c770bfbe0c035"
-flickr_api_secret = "a98eb427dd24a45b"
+
 
 flickrUserId = os.environ.get('FLICKR_USER_ID')
 # flickrUserId = "191464841@N08"
