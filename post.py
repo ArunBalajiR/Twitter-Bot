@@ -8,6 +8,8 @@ import requests
 from pprint import pprint
 from datetime import datetime
 from TwitterAPI import TwitterAPI
+import time
+import tweepy
 
 
 api = TwitterAPI(os.environ.get('TWITTER_CONSUMER_KEY'), 
@@ -15,6 +17,17 @@ api = TwitterAPI(os.environ.get('TWITTER_CONSUMER_KEY'),
                  os.environ.get('TWITTER_ACCESS_TOKEN_KEY'),
                  os.environ.get('TWITTER_ACCESS_TOKEN_SECRET'))
 
+
+auth = tweepy.OAuthHandler(
+    os.environ.get('TWITTER_CONSUMER_KEY'),
+    os.environ.get('TWITTER_CONSUMER_SECRET')
+)
+auth.set_access_token(
+    os.environ.get('TWITTER_ACCESS_TOKEN_KEY'),
+    os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
+)
+
+tweepy_api = tweepy.API(auth)
 
 # Get the GitHub Gist that contains our state database
 gh = github.Github(os.environ.get('GIST_TOKEN'))
@@ -70,20 +83,25 @@ twitterHandle = {
     "rockybhai369offl" : "@RockybhaiOffcl",
     "nikhilab1511":"@Nikhil_Ofcl",
     "KeshhFlix":"@ItzKeshh",
-    "ivineimmanuel0611" : "@IvineImmanuel",
+    "ivineimmanuel0611" : "@Ivine2255",
     "deepakppvfc6":"@_DR_Designs",
     "Rakhi\u30c4":"@rakesh_tarakian",
     "suryasandy13":"@TroyboiS",
     "evilhari664":"@Hariis87937166",
     "ItsAnbuchelvan":"@itsanbuchelvan",
-    "Dark Rum Pintrest":"@DarkRumPintrest",
+    "Dark Rum Pintrest":"@DarkRrum",
     "Prinz_ram":"@itzram73",
     "athulkrishnan884":"@athulkrishnanvf",
+    "kannanrishu" : "@Rishi_Touches",
+    "Ebi Suriya" : "@EbiSuriya",
+    "deepakppvfc6" : "@_Deepthy_",
+    "Retouch_Crew" : "@Retouch_Crew",
+
 }    
 
 # Assemble the tweet text
 
-tweet = f"{chosenPicture['title']} \n\nImage By {twitterHandle[chosenPicture['ownername']]}\n\n\nHD Link : https://onelink.to/reflix\n\n#ReFlix"
+tweet = f"{chosenPicture['title']} \n\nImage By {twitterHandle.get(chosenPicture['ownername'],chosenPicture['ownername'])}\n\n\nHD Download Link : {chosenPicture['url_o']}"
 
 print(" : Preview of tweet to be posted")
 print("==================================================================")
@@ -123,4 +141,62 @@ else:
         else:
             raise SystemExit(f" : FAILURE: Tweet not posted: {r.text}")
 
+
+#Like Retweet specified accounts and retweet for keyword 'retouch'
+try:
+    tweepy_api.verify_credentials()
+    print("Connected to API")
+    
+except:
+    print("Error during authentication")
+
+
+
+userID=['Retouch_Gallery','KamalOfcl','Rishi_Touches','ScarletSpeeds16','DarkRrum','ItzVarun_____','Ivine2255','Nikhil_Ofcl','HQ_Shots']
+keyword = "Retouch"
+
+print ('Bot is Running ..')
+print("\n")
+    
+for user in userID:
+  print(user)
+  tweets = tweepy_api.user_timeline(screen_name=user, 
+                  # 200 is the maximum allowed count
+                  count=1,
+                  include_rts = False,
+                  exclude_replies=True,
+                  tweet_mode = 'extended'
+                  )
+  for info in tweets[:1]:
+      id=info.id
+      print("ID: {}".format(id))
+      print(info.created_at)
+      print(info.full_text)
+      
+        
+      
+      status = tweepy_api.get_status(id)        
+      retweeted = status.retweeted 
+
+      if retweeted == True:
+          print("The authenticated user has retweeted the tweet.")
+      else:
+          print("The authenticated user has not retweeted the tweet.") 
+          tweet = tweepy_api.get_status(id) 
+          tweet.favorite()  
+          tweet.retweet()
+          print("it is now retweeted")
+          time.sleep(10)
+          
+
+print("Keyword Searching..")
+
+for tweet in tweepy.Cursor(tweepy_api.search_tweets, q=keyword,result_type="mixed").items(2):
+    
+    print('Liked & ReTweeted')
+    tweet.favorite()
+    tweet.retweet()
+    time.sleep(10)  
+
+print("Finished")
 

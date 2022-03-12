@@ -1,3 +1,4 @@
-requests
-PyGithub
-TwitterAPI
+requests==2.27.1
+PyGithub==1.55
+TwitterAPI==2.7.7
+tweepy==4.5.0
