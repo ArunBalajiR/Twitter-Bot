@@ -192,11 +192,16 @@ for user in userID:
 print("Keyword Searching..")
 
 for tweet in tweepy.Cursor(tweepy_api.search_tweets, q=keyword,result_type="mixed").items(2):
-    
-    print('Liked & ReTweeted')
-    tweet.favorite()
-    tweet.retweet()
-    time.sleep(10)  
+    id=tweet.id
+    print("ID: {}".format(id))
+    print(tweet.created_at)
 
+    status = api.get_status(id)        
+    
+    if not status.favorited and not status.retweeted:
+        print('Liked & ReTweeted')
+        tweet.favorite()
+        tweet.retweet()
+        time.sleep(10)  
 print("Finished")
 
