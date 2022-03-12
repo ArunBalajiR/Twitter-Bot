@@ -196,14 +196,13 @@ for tweet in tweepy.Cursor(tweepy_api.search_tweets, q=keyword,result_type="mixe
     print("ID: {}".format(id))
     print(tweet.created_at)
 
-    status = api.get_status(id)        
+    status = tweepy_api.get_status(id)        
     try:
         if not status.favorited and not status.retweeted:
             print('Liked & ReTweeted')
             tweet.favorite()
-            tweet.retweet()
             time.sleep(10)  
-    except:
+    except :
         print("Alrleady Posted")
 print("Finished")
 
