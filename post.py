@@ -82,7 +82,6 @@ twitterHandle = {
     "kamalvijay32" : "@KamalOfcl",
     "rockybhai369offl" : "@RockybhaiOffcl",
     "nikhilab1511":"@Nikhil_Ofcl",
-    "KeshhFlix":"@ItzKeshh",
     "ivineimmanuel0611" : "@Ivine2255",
     "deepakppvfc6":"@_DR_Designs",
     "Rakhi\u30c4":"@rakesh_tarakian",
@@ -94,7 +93,6 @@ twitterHandle = {
     "athulkrishnan884":"@athulkrishnanvf",
     "kannanrishu" : "@Rishi_Touches",
     "Ebi Suriya" : "@EbiSuriya",
-    "deepakppvfc6" : "@_Deepthy_",
     "Retouch_Crew" : "@Retouch_Crew",
 
 }    

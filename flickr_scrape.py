@@ -11,9 +11,9 @@ flickr_api_secret = 'a98eb427dd24a45b'
 
 
 # ------------------------------------
-flickrUserId = "192064740@N03"
-filename = "rockybhai"
-numberOfImages = 200
+flickrUserId = "193399205@N06"
+filename = "rishi"
+numberOfImages = 100
 # -----------------------------
 
 
