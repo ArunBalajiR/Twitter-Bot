@@ -11,7 +11,6 @@ from TwitterAPI import TwitterAPI
 import time
 import tweepy
 
-
 api = TwitterAPI(os.environ.get('TWITTER_CONSUMER_KEY'), 
                  os.environ.get('TWITTER_CONSUMER_SECRET'),
                  os.environ.get('TWITTER_ACCESS_TOKEN_KEY'),
@@ -32,6 +31,7 @@ tweepy_api = tweepy.API(auth)
 # Get the GitHub Gist that contains our state database
 gh = github.Github(os.environ.get('GIST_TOKEN'))
 gist = gh.get_gist(os.environ.get('PICTURE_DB'))
+
 
 
 postedPics = json.loads(gist.files['posted.json'].content)
@@ -186,7 +186,7 @@ for user in userID:
           tweet.favorite()  
           tweet.retweet()
           print("it is now retweeted")
-          time.sleep(10)
+          time.sleep(5)
           
 
 print("Keyword Searching..")
