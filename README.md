@@ -2,13 +2,10 @@
 
 This is a twitter bot that randomly selects Pictures from my favorite Flickr Accounts and posts them, along with some metadata, to Twitter It runs entirely within GitHub via [GitHub Actions](https://github.com/features/actions) and has no external dependencies except the Twitter API.
 
-## Example
 
-![example tweet](scratch/tweet.png)
 
-## Active Accounts
 
-- **[Reflix Wallpapers](https://twitter.com/Reflix_walls)** 
+
 
 ## Content Licensing
 
