@@ -32,70 +32,6 @@ tweepy_api = tweepy.API(auth)
 gh = github.Github(os.environ.get('GIST_TOKEN'))
 gist = gh.get_gist(os.environ.get('PICTURE_DB'))
 
-#Like Retweet specified accounts and retweet for keyword 'retouch'
-try:
-    tweepy_api.verify_credentials()
-    print("Connected to API")
-    
-except:
-    print("Error during authentication")
-
-
-
-userID=['Retouch_Gallery','KamalOfcl','Rishi_Touches','ScarletSpeeds16','DarkRrum','ItzVarun_____','Ivine2255','Nikhil_Ofcl','HQ_Shots']
-keyword = "Retouch"
-
-print ('Bot is Running ..')
-print("\n")
-    
-for user in userID:
-  print(user)
-  tweets = tweepy_api.user_timeline(screen_name=user, 
-                  # 200 is the maximum allowed count
-                  count=1,
-                  include_rts = False,
-                  exclude_replies=True,
-                  tweet_mode = 'extended'
-                  )
-  for info in tweets[:1]:
-      id=info.id
-      print("ID: {}".format(id))
-      print(info.created_at)
-      print(info.full_text)
-      
-        
-      
-      status = tweepy_api.get_status(id)        
-      retweeted = status.retweeted 
-
-      if retweeted == True:
-          print("The authenticated user has retweeted the tweet.")
-      else:
-          print("The authenticated user has not retweeted the tweet.") 
-          tweet = tweepy_api.get_status(id) 
-          tweet.favorite()  
-          tweet.retweet()
-          print("it is now retweeted")
-          time.sleep(5)
-          
-
-print("Keyword Searching..")
-
-for tweet in tweepy.Cursor(tweepy_api.search_tweets, q=keyword,result_type="mixed").items(2):
-    id=tweet.id
-    print("ID: {}".format(id))
-    print(tweet.created_at)
-
-    status = tweepy_api.get_status(id)        
-    try:
-        if not status.favorited and not status.retweeted:
-            print('Liked & ReTweeted')
-            tweet.favorite()
-            time.sleep(10)  
-    except :
-        print("Alrleady Posted")
-print("Finished")
-
 
 
 postedPics = json.loads(gist.files['posted.json'].content)
@@ -203,4 +139,68 @@ else:
         else:
             raise SystemExit(f" : FAILURE: Tweet not posted: {r.text}")
 
+
+#Like Retweet specified accounts and retweet for keyword 'retouch'
+try:
+    tweepy_api.verify_credentials()
+    print("Connected to API")
+    
+except:
+    print("Error during authentication")
+
+
+
+userID=['Retouch_Gallery','KamalOfcl','Rishi_Touches','ScarletSpeeds16','DarkRrum','ItzVarun_____','Ivine2255','Nikhil_Ofcl','HQ_Shots']
+keyword = "Retouch"
+
+print ('Bot is Running ..')
+print("\n")
+    
+for user in userID:
+  print(user)
+  tweets = tweepy_api.user_timeline(screen_name=user, 
+                  # 200 is the maximum allowed count
+                  count=1,
+                  include_rts = False,
+                  exclude_replies=True,
+                  tweet_mode = 'extended'
+                  )
+  for info in tweets[:1]:
+      id=info.id
+      print("ID: {}".format(id))
+      print(info.created_at)
+      print(info.full_text)
+      
+        
+      
+      status = tweepy_api.get_status(id)        
+      retweeted = status.retweeted 
+
+      if retweeted == True:
+          print("The authenticated user has retweeted the tweet.")
+      else:
+          print("The authenticated user has not retweeted the tweet.") 
+          tweet = tweepy_api.get_status(id) 
+          tweet.favorite()  
+          tweet.retweet()
+          print("it is now retweeted")
+          time.sleep(5)
+          
+
+print("Keyword Searching..")
+
+for tweet in tweepy.Cursor(tweepy_api.search_tweets, q=keyword,result_type="mixed").items(2):
+    id=tweet.id
+    print("ID: {}".format(id))
+    print(tweet.created_at)
+
+    status = tweepy_api.get_status(id)        
+    try:
+        if not status.favorited and not status.retweeted:
+            print('Liked & ReTweeted')
+            tweet.favorite()
+            time.sleep(10)  
+    except :
+        print("Alrleady Posted")
+print("Finished")
 
