@@ -106,40 +106,6 @@ print("==================================================================")
 print(tweet)
 print("==================================================================")
 
-# Post to Twitter!
-
-if "DRY_RUN" in os.environ:
-    print(" : Dry Run, exiting without posting to twitter")
-else:
-    # STEP 1 - upload image
-    file = open('img.jpg', 'rb')
-    data = file.read()
-    r = api.request('media/upload', None, {'media': data})
-    if r.status_code == 200:
-        print(' : SUCCESS: Photo upload to twitter')
-    else: 
-        raise SystemExit(f" : FAILURE: Photo upload to twitter: {r.text}")
-
-    # STEP 2 - post tweet with a reference to uploaded image
-    if r.status_code == 200:
-        media_id = r.json()['media_id']
-        r = api.request('statuses/update', {'status': tweet, 'media_ids': media_id})
-        if r.status_code == 200: 
-
-            twitterPostData = json.loads(r.text)
-
-            print(' : SUCCESS: Tweet posted')
-
-            # Append to the postedPics database
-
-            postedPics[chosenPicture['id']] = {"tweet_id":twitterPostData['id'], "posted_on":datetime.now().isoformat()}
-
-            gist.edit(files={"posted.json": github.InputFileContent(content=json.dumps(postedPics, indent=2))})
-            print(" : PostedPics updated")
-        else:
-            raise SystemExit(f" : FAILURE: Tweet not posted: {r.text}")
-
-
 #Like Retweet specified accounts and retweet for keyword 'retouch'
 try:
     tweepy_api.verify_credentials()
@@ -203,4 +169,40 @@ for tweet in tweepy.Cursor(tweepy_api.search_tweets, q=keyword,result_type="mixe
     except :
         print("Alrleady Posted")
 print("Finished")
+
+
+
+# Post to Twitter!
+
+if "DRY_RUN" in os.environ:
+    print(" : Dry Run, exiting without posting to twitter")
+else:
+    # STEP 1 - upload image
+    file = open('img.jpg', 'rb')
+    data = file.read()
+    r = api.request('media/upload', None, {'media': data})
+    if r.status_code == 200:
+        print(' : SUCCESS: Photo upload to twitter')
+    else: 
+        raise SystemExit(f" : FAILURE: Photo upload to twitter: {r.text}")
+
+    # STEP 2 - post tweet with a reference to uploaded image
+    if r.status_code == 200:
+        media_id = r.json()['media_id']
+        r = api.request('statuses/update', {'status': tweet, 'media_ids': media_id})
+        if r.status_code == 200: 
+
+            twitterPostData = json.loads(r.text)
+
+            print(' : SUCCESS: Tweet posted')
+
+            # Append to the postedPics database
+
+            postedPics[chosenPicture['id']] = {"tweet_id":twitterPostData['id'], "posted_on":datetime.now().isoformat()}
+
+            gist.edit(files={"posted.json": github.InputFileContent(content=json.dumps(postedPics, indent=2))})
+            print(" : PostedPics updated")
+        else:
+            raise SystemExit(f" : FAILURE: Tweet not posted: {r.text}")
+
 
