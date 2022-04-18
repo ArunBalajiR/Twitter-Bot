@@ -150,7 +150,7 @@ except:
 
 
 
-userID=['Retouch_Gallery','KamalOfcl','Rishi_Touches','ScarletSpeeds16','DarkRrum','ItzVarun_____','Ivine2255','Nikhil_Ofcl','HQ_Shots','ActressTweeter']
+userID=['Retouch_Gallery','KamalOfcl','Rishi_Touches','ScarletSpeeds16','DarkRrum','ItzVarun_____','Ivine2255','Nikhil_Ofcl','HQ_Shots']
 keyword = "Retouch"
 
 print ('Bot is Running ..')
